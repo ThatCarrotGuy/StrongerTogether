@@ -1,0 +1,1 @@
+global.view_targets[PlayerIndex + 1] = id;
