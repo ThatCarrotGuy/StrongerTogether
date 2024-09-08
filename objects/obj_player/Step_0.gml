@@ -1,20 +1,19 @@
-var L_R = 0;
-var U_D = 0;
+var horizontal = 0;
+var jump = 0;
 var vsp = 0;
+
 if(PlayerIndex == 0)
 {
-	L_R = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-	U_D = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+	horizontal = keyboard_check(ord("D")) - keyboard_check(ord("A"));
+	jump = keyboard_check(ord("W"));
 }
 else if(PlayerIndex == 1)
 {
-	L_R = keyboard_check(vk_right) - keyboard_check(vk_left);
-	U_D = keyboard_check(vk_down) - keyboard_check(vk_up);
-
-	sprite_index = spr_player2;
+	horizontal = keyboard_check(vk_right) - keyboard_check(vk_left);
+	jump = keyboard_check(vk_up);
 }
 
-var hsp = L_R * spd;
+var hsp = horizontal * spd;
 vsp = vsp + grv;
 
 if (place_meeting(x+hsp, y, col_obj))
@@ -37,6 +36,12 @@ if (place_meeting(x+hsp, y, obj_player))
 
 x = x + hsp;
 
+if (jump && jumps > 0)
+{
+	jumps = 0
+	vsp = -10
+}
+
 if (place_meeting(x, y+vsp, obj_player))
 {
 	while(!place_meeting(x, y+sign(vsp), obj_player))
@@ -53,14 +58,32 @@ if (place_meeting(x, y+vsp, col_obj))
 		y = y + sign(vsp);
 	}
 	vsp = 0;
+	jumps = 1
 }
 
 y = y + vsp;
 
-if(L_R != 0) {
-	image_xscale = L_R * 2
+if(horizontal != 0) 
+{
+	image_xscale = horizontal * 2
+	
+	if(PlayerIndex != 0)
+	{
+		sprite_index = spr_player2Walk
+	}
+	else
+	{
+		sprite_index = spr_playerWalk
+	}
 }
 else
 {
-	speed = 0;
+	if(PlayerIndex != 0)
+	{
+		sprite_index = spr_player2
+	}
+	else
+	{
+		sprite_index = spr_player
+	}
 }
